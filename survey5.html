@@ -1,0 +1,184 @@
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+    <!-- return home button -->
+    <a href="homepage2.html">
+    <button class="button">Return Home</button>
+</a>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="https://glitch.com/favicon.ico" />
+    <title>Survey</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script src="/script.js" defer></script>
+</head>
+    
+    
+<body>
+<div class="wrapper">
+    <div class="content" role="main">
+        <h1 class="title">Survey</h1>
+
+        <form id="surveyForm">
+            <label for="spend">
+                <h1>Spending on new stuff per month (clothes, furniture, and other physical goods)?</h1>
+            </label><br>
+            Answer as best you can.
+            <br>You can update or add more detail after initial setup. <br>
+            <input type="radio" id="200" name="spending" value="Less than $200">
+            <label for="200"> Less than $200</label><br>
+            <input type="radio" id="500" name="spending" value="Between $200 to $1,000">
+            <label for="500"> Between $200 to $1,000</label><br>
+            <input type="radio" id="1000" name="spending" value="More than $1,000">
+            <label for="1000"> More than $1,000</label><br>
+
+            <label for="electric">
+                <h1>How is your electricity powered? (examples of clean energy are solar and wind)</h1>
+            </label><br>
+            <p>Answer as best you can.</p>
+            <input type="radio" id="100" name="electricity" value="100% clean">
+            <label for="100"> 100% clean</label><br>
+            <input type="radio" id="50" name="electricity" value="50% clean">
+            <label for="50"> 50% clean</label><br>
+            <input type="radio" id="not" name="electricity" value="Not clean">
+            <label for="not"> Not clean</label><br>
+
+            <label for="flight">
+                <h1>How many roundtrip flights have you taken in the last year?</h1>
+            </label><br>
+            <p>Answer as best you can.</p>
+            <input type="radio" id="zero" name="flights" value="Zero">
+            <label for="zero"> Zero</label><br>
+            <input type="radio" id="one" name="flights" value="One to Two">
+            <label for="one"> One to Two</label><br>
+            <input type="radio" id="two" name="flights" value="More than Two">
+            <label for="two"> More than Two</label><br>
+
+            <!-- Button to trigger the assignment -->
+            <button type="button" onclick="processSurvey()">Submit to get results!</button>
+        </form>
+
+        <p id="output"></p>
+
+        <!-- Create a canvas for the chart -->
+        <canvas id="spendingChart" width="400" height="200"></canvas>
+        <canvas id="electricityChart" width="400" height="200"></canvas>
+        <canvas id="flightsChart" width="400" height="200"></canvas>
+
+
+        <script>
+            function processSurvey() {
+    // Get the selected values
+    const spending = document.querySelector('input[name="spending"]:checked');
+    const electricity = document.querySelector('input[name="electricity"]:checked');
+    const flights = document.querySelector('input[name="flights"]:checked');
+
+    // Initialize output message
+    let output = "Your results: <br>";
+
+    // Validate input
+    if (!spending || !electricity || !flights) {
+        alert("Please answer all questions before submitting.");
+        return;
+    }
+
+    // Assign values to variables for chart data
+    let spendingValue, electricityValue, flightsValue;
+
+    // If-Else statements for customized messages and assigning chart values based on Spending
+    if (spending.value === "Less than $200") {
+        output += "You're a smart spender!<br>";
+        spendingValue = 200;
+    } else if (spending.value === "Between $200 to $1,000") {
+        output += "You have a moderate spending habit.<br>";
+        spendingValue = 750;
+    } else if (spending.value === "More than $1,000") {
+        output += "You have a luxurious spending habit, consider spending less to reduce waste!<br>";
+        spendingValue = 1000;
+    }
+
+    // Messages for Electricity Source and assigning chart values
+    if (electricity.value === "100% clean") {
+        output += "Great job! You're using 100% clean energy.<br>";
+        electricityValue = 100; 
+    } else if (electricity.value === "50% clean") {
+        output += "You're on the right track, but there's room for improvement.<br>";
+        electricityValue = 50; 
+    } else {
+        output += "You should consider switching to cleaner energy sources.<br>";
+        electricityValue = 0; 
+    }
+
+    if (flights.value === "Zero") {
+        output += "You're minimizing your carbon footprint!<br>";
+        flightsValue = 0;
+    } else if (flights.value === "One to Two") {
+        output += "You have moderate travel habits!<br>";
+        flightsValue = 1.5;
+    } else if (flights.value === "More than Two") {
+        output += "You're a frequent flyer! Consider eco-friendly travel options.<br>";
+        flightsValue = 2;
+    }
+
+    document.getElementById('output').innerHTML = output;
+
+
+    const xAxisLabels = ['You', 'American', 'Global'];
+
+    
+    const americanSpending = 1000; 
+    const globalSpending = 300; 
+    const americanElectricity = 20; 
+    const globalElectricity = 30; 
+    const americanFlights = 1.4; 
+    const globalFlights = 1; 
+
+   
+    const spendingCtx = document.getElementById('spendingChart').getContext('2d');
+    new Chart(spendingCtx, {
+        type: 'bar',
+        data: {
+            labels: xAxisLabels, // x-axis labels
+            datasets: [{
+                label: 'Spending Value',
+                data: [spendingValue, americanSpending, globalSpending], // y-axis values
+                backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1 }] },options: {scales: {y: {beginAtZero: true} }}});
+
+    
+    const electricityCtx = document.getElementById('electricityChart').getContext('2d');
+    new Chart(electricityCtx, {
+        type: 'bar',
+        data: {
+            labels: xAxisLabels,
+            datasets: [{
+                label: 'Electricity Source',
+                data: [electricityValue, americanElectricity, globalElectricity],
+                backgroundColor: 'rgba(255, 206, 86, 0.6)',
+                borderColor: 'rgba(255, 206, 86, 1)',
+                borderWidth: 1 }] },options: {scales: {y: {beginAtZero: true} } }});
+
+  
+    const flightsCtx = document.getElementById('flightsChart').getContext('2d');
+    new Chart(flightsCtx, {
+        type: 'bar',
+        data: {
+            labels: xAxisLabels,
+            datasets: [{
+                label: 'Flights Taken',
+                data: [flightsValue, americanFlights, globalFlights],
+                backgroundColor: 'rgba(153, 102, 255, 0.6)',
+                borderColor: 'rgba(153, 102, 255, 1)',
+                borderWidth: 1 }]},options: {scales: {y: {beginAtZero: true }} }});}
+        </script>
+    </div>
+</div>
+
+
+  </body>
+</html>
